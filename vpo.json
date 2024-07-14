@@ -34,13 +34,9 @@
     ],
     "rules": [
       {
-        "domain": "www.speedtest.net",
-        "server": "dns-direct"
-      },
-      {
         "domain": "cp.cloudflare.com",
         "server": "dns-remote",
-        "rewrite_ttl": 3000
+        "rewrite_ttl": 100000
       }
     ],
     "final": "dns-remote",
@@ -85,7 +81,8 @@
       "tag": "select",
       "outbounds": [
         "auto",
-        "WS7-All-@ArV2ray § 0"
+        "National § 0",
+        "WoW § 1"
       ],
       "default": "auto"
     },
@@ -93,22 +90,128 @@
       "type": "urltest",
       "tag": "auto",
       "outbounds": [
-        "WS7-All-@ArV2ray § 0"
+        "National § 0",
+        "WoW § 1"
       ],
       "url": "http://connectivitycheck.gstatic.com/generate_204",
       "interval": "10m0s",
       "idle_timeout": "1h40m0s"
     },
     {
-      "type": "vless",
-      "tag": "WS7-All-@ArV2ray § 0",
-      "server": "www.speedtest.net",
-      "server_port": 8080,
-      "uuid": "telegram-id-ArV2ray",
-      "transport": {
-        "type": "ws",
-        "path": "/telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry,telegram-ArV2ry",
-        "headers": {
+      "type": "wireguard",
+      "tag": "National § 0",
+      "local_address": [
+        "172.16.0.2/24",
+        "2606:4700:110:86da:4164:f932:be78:559e/128"
+      ],
+      "private_key": "YJI333tNGuwkps9ENsFjuB7XUhh2LyzCfyv1gtXmUXI=",
+      "server": "162.159.193.202",
+      "server_port": 2506,
+      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      "reserved": "cfug",
+      "mtu": 1330,
+      "fake_packets": "8-15",
+      "fake_packets_size": "40-100",
+      "fake_packets_delay": "20-250"
+    },
+    {
+      "type": "wireguard",
+      "tag": "WoW § 1",
+      "detour": "National § 0",
+      "local_address": [
+        "172.16.0.2/24",
+        "2606:4700:110:8680:14fe:1676:eae:a451/128"
+      ],
+      "private_key": "6OKu8NiSwfBX1MGC5yJZCJ8YptRNsWEs3L8z0+kW8l8=",
+      "server": "162.159.192.1",
+      "server_port": 987,
+      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      "reserved": "hgDQ",
+      "mtu": 1280
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "direct",
+      "tag": "direct-fragment",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "1-500",
+        "sleep": "0-500"
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "bypass"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "rule_set": [
+          "geoip-ir",
+          "geosite-ir"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "inbound": "dns-in",
+        "outbound": "dns-out"
+      },
+      {
+        "port": 53,
+        "outbound": "dns-out"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "select"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geoip-ir",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geoip-ir.srs",
+        "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-ir",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geosite-ir.srs",
+        "update_interval": "120h0m0s"
+      }
+    ],
+    "final": "select",
+    "auto_detect_interface": true,
+    "override_android_vpn": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "clash.db"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:6756",
+      "secret": "POXyXZbdv0V-LdWe"
+    }
+  }
+}
           "Host": "7.V.www.speedtest.net.dev.cloudflare.com.mashtimji.iR."
         },
         "max_early_data": 2048,
